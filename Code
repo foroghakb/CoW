@@ -1,13 +1,34 @@
+####################################
+# SUPPLEMENTARY MATERIAL: CoW PAPER#
+####################################
+
 
 library(sp)
 library(ggplot2)
 library(dplyr)
-library(hrbrthemes)
-library("readxl")
+library(readxl)
 
 setwd()
 
-#Conflict Intensity, UCDP-PRIO
+
+
+#MAPS, Figure 4.1
+geo <- read_excel("longlat.xlsx")
+require(sf)
+rusMap <- readRDS("gadm36_RUS_0_sp.rds")
+
+
+dat <- data.frame(Longitude= geo$longitude,
+                  Latitude = geo$latitude)
+coordinates(dat) <- ~ Longitude + Latitude
+
+
+plot(rusMap)
+points(x=dat$Longitude,y=dat$Latitude, pch=20, col="red", cex= 0.45)
+
+
+
+#Conflict Intensity, UCDP-PRIO, Table 4.2
 
 prioucdp <- read.csv("ucdp-prio-acd-201.csv")
 
@@ -30,18 +51,4 @@ polyarchy$Year
 russia <- data.frame(rusPolyarchy, polyarchy$Year)
 byyear <- aggregate(polyarchy$ID,by=list(polyarchy$Year),FUN=sum) 
 
-
-#MAPS
-geo <- read_excel("longlat.xlsx")
-require(sf)
-rusMap <- readRDS("gadm36_RUS_0_sp.rds")
-
-
-dat <- data.frame(Longitude= geo$longitude,
-                  Latitude = geo$latitude)
-coordinates(dat) <- ~ Longitude + Latitude
-
-
-plot(rusMap)
-points(x=dat$Longitude,y=dat$Latitude, pch=20, col="red", cex= 0.45)
   
